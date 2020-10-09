@@ -30,4 +30,9 @@ public class Hashtag {
         return quantidade == hashtag.quantidade &&
                 Objects.equals(texto, hashtag.texto);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(texto, quantidade);
+    }
 }

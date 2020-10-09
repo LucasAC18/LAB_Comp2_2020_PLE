@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  *  Esta classe implementa um sistema de mensagens curtas estilo Twitter.
@@ -12,8 +14,8 @@ import java.util.ArrayList;
 public class TuiterLite<T> {
 
     public static final int TAMANHO_MAXIMO_TUITES = 120;
-    private ArrayList<Usuario> usuariosCadastrados = new ArrayList();
-    private ArrayList<Hashtag> hashatgsPostadas = new ArrayList();
+    private HashSet<Usuario> usuariosCadastrados = new HashSet<>();
+    private HashMap<String,Hashtag> hashtagsNoSistema = new HashMap<>();
 
     private Hashtag hashtagMaisPopular;
     private int maiorQuantidade = 0;
@@ -27,6 +29,9 @@ public class TuiterLite<T> {
      */
     public Usuario cadastrarUsuario(String nome, String email) {
         Usuario usuariocriado = new Usuario(nome, email);
+        if (usuariosCadastrados.contains(usuariocriado)) {
+            return null;
+        }
         usuariosCadastrados.add(usuariocriado);
         return usuariocriado;
     }
@@ -56,7 +61,7 @@ public class TuiterLite<T> {
      * @return A hashtag mais comum, ou null se nunca uma hashtag houver sido tuitada.
      */
     public String getHashtagMaisComum() {
-        for (Hashtag hashtagT : hashatgsPostadas) {
+        for (Hashtag hashtagT : hashtagsNoSistema.values()) {
             if (hashtagT.getQuantidade() >= maiorQuantidade) {
                 maiorQuantidade = hashtagT.getQuantidade();
                 hashtagMaisPopular = hashtagT;
@@ -67,10 +72,10 @@ public class TuiterLite<T> {
 
     private void atualizarHashtagsPostadas(ArrayList<Hashtag> listaDeTags) {
         for (Hashtag hashtagT : listaDeTags) {
-            if (hashatgsPostadas.contains(hashtagT)) {
-                hashatgsPostadas.get(hashatgsPostadas.indexOf(hashtagT)).incrementarQuantidade();
+            if (hashtagsNoSistema.containsKey(hashtagT.getTexto())) {
+                hashtagsNoSistema.get(hashtagT.getTexto()).incrementarQuantidade();
             } else {
-                hashatgsPostadas.add(hashtagT);
+                hashtagsNoSistema.put(hashtagT.getTexto(), hashtagT);
             }
         }
     }

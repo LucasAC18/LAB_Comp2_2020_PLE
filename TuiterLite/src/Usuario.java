@@ -54,4 +54,9 @@ public class Usuario {
         Usuario usuario = (Usuario) o;
         return Objects.equals(email, usuario.email);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
+    }
 }
