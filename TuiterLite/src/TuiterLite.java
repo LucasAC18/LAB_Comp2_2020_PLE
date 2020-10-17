@@ -45,9 +45,11 @@ public class TuiterLite<T> {
      * @param texto O texto desejado
      * @return Um "tuíte", que será devidamente publicado no sistema
      */
-    public Tuite tuitarAlgo(Usuario usuario, String texto) {
-        if (texto.length() > TAMANHO_MAXIMO_TUITES || !(usuariosCadastrados.contains(usuario))) {
-            return null;
+    public Tuite tuitarAlgo(Usuario usuario, String texto) throws TamanhoExcedidoException, UsuarioInexistenteException {
+        if (texto.length() > TAMANHO_MAXIMO_TUITES) {
+            throw new TamanhoExcedidoException();
+        } else if (!(usuariosCadastrados.contains(usuario))) {
+            throw new UsuarioInexistenteException();
         }
         Tuite tuite = new Tuite(usuario, texto);
         usuario.incrementarQuantTuites();
